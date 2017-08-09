@@ -43,7 +43,7 @@ class Booru
     res = @db.execute("select MD5, PATH, TAGS from Images where MD5 = \"#{md5}\" ;")
     if res == []
       abort("ERROR::Database cannot find image for md5 \"#{md5}\"")
-    else if res.length > 1
+    elsif res.length > 1
       abort("ERROR::Database returned multiple results for MD5 \"#{md5}\"")
     else
       res = res[0]
@@ -58,7 +58,7 @@ class Booru
     res = @db.execute("select MD5, PATH, TAGS from Images where PATH = \"#{path}\" ;")
     if res == []
       abort("ERROR::Database cannot find image for PATH \"#{path}\"")
-    else if res.length > 1
+    elsif res.length > 1
       #TODO: correctly handle duplicates
       abort("ERROR::Database returned multiple results for PATH \"#{path}\"")
     else
