@@ -8,5 +8,5 @@ get '/' do
 end
 
 get '/image/:md5' do
-  boo.request_md5(params['md5']).path
+  erb :image, :locals => {:img => boo.request_md5(params['md5'])}
 end
