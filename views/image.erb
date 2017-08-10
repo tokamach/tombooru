@@ -1,9 +1,10 @@
 <html>
     <head>
-	<title><%=img.path%></title>
+	<title>tombooru: <%=img.md5%></title>
     </head>
     <body>
-	<%=img.path%>
-	<%=img.md5%>
+	<p><%=img.path%></p>
+	<img src="/image/raw/<%=img.md5%>"/>
+	<p><%=img.md5%></p>
     </body>
 </html>
