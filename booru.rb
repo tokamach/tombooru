@@ -107,14 +107,20 @@ class Booru
   end
 
   #populate an image database by recursively iterating through folders
+  #adds tags based on folder
+  #TODO: add tagging rules system
   def populate_db(folder_path)
     unless @populated
       @db.execute("create table Images (MD5 text, PATH text, TAGS text);")
       Find.find(folder_path) do |f|
         if(f =~ /.*\.(png|jpg|gif|jpeg)/)
           md5 = Digest::MD5.file(f).hexdigest
-#         puts "adding path: #{f} \nmd5: #{md5}\n\n"
-          add(md5, f, "image,anime,qt")
+
+          puts f
+          tags = f.scan(/.+?animu\/(.*)\/.+\.\w+/)[0][0].split("/")
+          puts tags.inspect
+
+          add(md5, f, tags.to_csv)
         end
       end
     end
