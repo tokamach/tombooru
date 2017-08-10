@@ -2,6 +2,7 @@
 require 'find'
 require 'sqlite3'
 require 'digest/md5'
+require 'csv'
 
 class Image
   def initialize(md5, path, tags)
@@ -10,9 +11,18 @@ class Image
     @tags = tags
   end
 
+  #get tag array from CSV string
+  def tags
+    CSV.parse(@tags)
+  end
+
+  #set tag CSV string from array 
+  def tags=(arr)
+    @tags = arr.to_csv
+  end
+
   attr_reader :path
   attr_reader :md5
-  attr_reader :tags
 end
 
 class Booru
@@ -70,6 +80,28 @@ class Booru
     end
   end
 
+  def request_tag(tag)
+    res = @db.execute("select MD5, PATH, TAGS from Images where TAGS like \"%#{tag}%\" ;")
+    if res == []
+      abort("ERROR::Database cannot find image for TAG \"#{tag}\"")
+    elsif res.length > 1
+      #multiple results
+      res.collect do |i|
+        md5  = i[0]
+        path = i[1]
+        tags = i[2]
+        Image.new(md5, path, tags)
+      end
+    else
+      #single result
+      res = res[0]
+      md5 = res[0]
+      path = res[1]
+      tags = res[2]
+      return Image.new(md5, path, tags)
+    end
+  end
+
   def add(md5, path, tags)
     @db.execute("insert into Images (MD5, PATH, TAGS) VALUES ( \"#{md5}\", \"#{path}\", \"#{tags}\" );")
   end
@@ -82,7 +114,7 @@ class Booru
         if(f =~ /.*\.(png|jpg|gif|jpeg)/)
           md5 = Digest::MD5.file(f).hexdigest
 #         puts "adding path: #{f} \nmd5: #{md5}\n\n"
-          add(md5, f, "image")
+          add(md5, f, "image,anime,qt")
         end
       end
     end
