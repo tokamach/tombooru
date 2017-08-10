@@ -6,7 +6,7 @@
 	<h1>results:</h1>
 	<ul>
 	    <%images.each do |i|%>
-		<li><%=i.md5%></li>
+		<li><a href="/image/<%=i.md5%>"><%=i.md5%></a></li>
 	    <%end%>
 	</ul>
     </body>
